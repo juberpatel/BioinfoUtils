@@ -30,11 +30,11 @@ import htsjdk.samtools.SAMRecord;
  * @author Juber Patel
  *
  */
-public class MapQ20Filter implements AlignmentFilter
+public class MapQ20Filter
 {
 	private static final int minMappingQuality = 20;
 
-	@Override
+	
 	public boolean isGoodAlignment(SAMRecord record)
 	{
 		// TODO what are we doing with chimeric/supplementary alignments??
