@@ -2,22 +2,24 @@
  *
  * @author Juber Patel
  *
- * Copyright (c) 2017 Innovation Lab, CMO, MSKCC.
+ *         Copyright (c) 2017 Innovation Lab, CMO, MSKCC.
  *
- * This software was developed at the Innovation Lab, Center for Molecular Oncology, 
- * Memorial Sloan Kettering Cancer Center, New York, New York.
+ *         This software was developed at the Innovation Lab, Center for
+ *         Molecular Oncology,
+ *         Memorial Sloan Kettering Cancer Center, New York, New York.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *         Licensed under the Apache License, Version 2.0 (the "License");
+ *         you may not use this file except in compliance with the License.
+ *         You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *         Unless required by applicable law or agreed to in writing, software
+ *         distributed under the License is distributed on an "AS IS" BASIS,
+ *         WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *         implied.
+ *         See the License for the specific language governing permissions and
+ *         limitations under the License.
  *******************************************************************************/
 /**
  * 
@@ -37,12 +39,16 @@ public class GenotypeID
 	public final GenotypeEventType type;
 	public final String contig;
 	/**
-	 * genomic position
+	 * genomic start position of the genotype
 	 */
 	public final int position;
 
 	/**
-	 * ref is null for insertion and alt is null for deletion
+	 * genomic end position of the genotype
+	 */
+	public final int endPosition;
+
+	/**
 	 * 
 	 * ref.length gives the length of the deletion while alt.length gives the
 	 * length of the insertion
@@ -58,6 +64,30 @@ public class GenotypeID
 		this.position = position;
 		this.ref = ref;
 		this.alt = alt;
+
+		// set end position
+		if (type == GenotypeEventType.SNV)
+		{
+			endPosition = position;
+		}
+		else if (type == GenotypeEventType.MNV)
+		{
+			endPosition = position + alt.length - 1;
+		}
+		else if (type == GenotypeEventType.INSERTION)
+		{
+			// insertion is like a string of bases hanging between 2 reference
+			// bases
+			endPosition = position + 1;
+		}
+		else if (type == GenotypeEventType.DELETION)
+		{
+			endPosition = position + ref.length - 1;
+		}
+		else
+		{
+			endPosition = position;
+		}
 	}
 
 	@Override
