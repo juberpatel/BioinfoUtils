@@ -158,37 +158,29 @@ public class Util
 		return false;
 	}
 
-	public static String reverseComplement(String seq)
+	public static void reverseComplement(char[] seq)
 	{
-		StringBuilder s = new StringBuilder(seq.length());
+		reverse(seq);
 
-		for (int j = seq.length() - 1; j >= 0; j--)
+		for (int i = 0; i < seq.length; i++)
 		{
-			char c = seq.charAt(j);
-
-			if (c == 'A')
+			if (seq[i] == 'A')
 			{
-				s.append('T');
+				seq[i] = 'T';
 			}
-			else if (c == 'C')
+			else if (seq[i] == 'C')
 			{
-				s.append('G');
+				seq[i] = 'G';
 			}
-			else if (c == 'G')
+			else if (seq[i] == 'G')
 			{
-				s.append('C');
+				seq[i] = 'C';
 			}
-			else if (c == 'T')
+			else if (seq[i] == 'T')
 			{
-				s.append('A');
-			}
-			else
-			{
-				s.append(c);
+				seq[i] = 'A';
 			}
 		}
-
-		return s.toString();
 	}
 
 	public static void reverse(char[] chars)
@@ -200,5 +192,13 @@ public class Util
 			chars[i] = chars[j];
 			chars[j] = t;
 		}
+	}
+	
+	public static void main(String[] args)
+	{
+		char[] s = "ACCGCAATCCG".toCharArray();
+		System.out.println(s);
+		reverseComplement(s);
+		System.out.println(s);
 	}
 }
