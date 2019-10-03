@@ -1,11 +1,17 @@
 # BioinfoUtils 
 
-Common Bioinformatics utility classes and methods used in other projects such as Waltz  
-
-This software was developed at the Innovation Lab, Center for Molecular Oncology, Memorial Sloan Kettering Cancer Center.
+Juber Patel's Java library with many utility classes and methods related to scientific computing in general and computational biology in particular. These utilities are used in other projects like Marianas and Waltz.   
 
 
-## Dependencies
+## Dependencies (depending on which classes you want to use)
 
 1. HTSJDK
-2. Google Guava
+2. Apache Commons Math
+3. Google Guava
+
+
+## Utilities 
+
+1. Suffix arrays for fast search on strings (planned)
+2. Weibull distribution parameter estimation from data. This very useful, versatile distribution can then be used from Commons Math.
+3. 
