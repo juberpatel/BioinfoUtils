@@ -83,20 +83,6 @@ public class FindHotspotsInNormals
 				"Tumor");
 
 		processAndPrint(normalHotspots, tumorHotspots, hotspots, pileupList);
-
-		/*
-		 * // write output
-		 * BufferedWriter writer = new BufferedWriter(
-		 * new FileWriter("hotspots-in-normals.txt"));
-		 * writer.write(
-		 * "Mutation\tSample\tPatient\tSampleType\tAltCount\tTotal\tAF\n");
-		 * 
-		 * printTable(normalHotspots, hotspots, "Normal", writer);
-		 * printTable(tumorHotspots, hotspots, "Tumor", writer);
-		 * 
-		 * writer.close();
-		 */
-
 	}
 
 	private static void processAndPrint(
@@ -150,6 +136,11 @@ public class FindHotspotsInNormals
 
 				// print tumor counts for the same mutation for the same patient
 				counts = tumorHotspots.get(mutation);
+				if (counts == null || counts.isEmpty())
+				{
+					continue;
+				}
+
 				for (String sample : counts.keySet())
 				{
 					if (patientSamples.contains(sample))
@@ -229,32 +220,6 @@ public class FindHotspotsInNormals
 		return patientSamples;
 	}
 
-	private static void printTable(
-			Map<String, Map<String, Integer[]>> hotspotCounts,
-			Map<String, String> hotspots, String sampleType,
-			BufferedWriter writer) throws IOException
-	{
-		DecimalFormat df = new DecimalFormat("#.####");
-		for (String mutation : hotspotCounts.keySet())
-		{
-			Map<String, Integer[]> counts = hotspotCounts.get(mutation);
-			for (String sample : counts.keySet())
-			{
-				Integer[] pair = counts.get(sample);
-				double af = 0;
-				if (pair[1] != 0)
-				{
-					af = (pair[0] * 1.0) / pair[1];
-				}
-
-				String mutationName = hotspots.get(mutation);
-
-				writer.write(mutationName + "\t" + sample + "\t" + sampleType
-						+ "\t" + pair[0] + "\t" + pair[1] + "\t" + df.format(af)
-						+ "\n");
-			}
-		}
-	}
 
 	private static void getSampleHotspots(Set<String> hotspots, File pileupList,
 			Map<String, Map<String, Integer[]>> hotspotCounts, String type)
