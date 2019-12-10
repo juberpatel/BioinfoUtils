@@ -90,6 +90,88 @@ public class GenotypeID
 		}
 	}
 
+	/**
+	 * construct a partial genotype that is contained in the given span on the
+	 * same contig, inclusive.
+	 * 
+	 * start must be <= end
+	 * 
+	 * @return
+	 */
+	public GenotypeID partialGenotype(String contig, int start, int end)
+	{
+		// no overlap at all
+		if (!this.contig.equals(contig) || endPosition < start
+				|| position > end)
+		{
+			return null;
+		}
+
+		// genotype is fully contained in the given span
+		if (contig.equals(this.contig) && start <= this.position
+				&& end >= this.endPosition)
+		{
+			return this;
+		}
+
+		start = start > position ? start : position;
+		end = end < endPosition ? end : endPosition;
+
+		byte[] nRef = null;
+		byte[] nAlt = null;
+
+		if (type == GenotypeEventType.SNV)
+		{
+			// no change at all
+			return this;
+		}
+		else if (type == GenotypeEventType.MNV)
+		{
+			nRef = new byte[end - start + 1];
+			nAlt = new byte[end - start + 1];
+			System.arraycopy(ref, start - position, nRef, 0, nRef.length);
+			System.arraycopy(alt, start - position, nAlt, 0, nAlt.length);
+
+			if (start == end)
+			{
+				return new GenotypeID(GenotypeEventType.SNV, contig, start,
+						nRef, nAlt);
+			}
+			else
+			{
+				return new GenotypeID(type, contig, start, nRef, nAlt);
+			}
+
+		}
+		else if (type == GenotypeEventType.DELETION)
+		{
+			// 0 base deletion
+			if (start == end)
+			{
+				return null;
+			}
+
+			// eg.
+			// GTCC - ref
+			// G - alt
+
+			nRef = new byte[end - start + 1];
+			nAlt = new byte[1];
+
+			System.arraycopy(ref, start - position, nRef, 0, nRef.length);
+
+			return new GenotypeID(type, contig, start, nRef, nAlt);
+
+		}
+		else if (type == GenotypeEventType.INSERTION)
+		{
+			// not doing partials for insertions
+			return null;
+		}
+
+		return null;
+	}
+
 	@Override
 	public int hashCode()
 	{

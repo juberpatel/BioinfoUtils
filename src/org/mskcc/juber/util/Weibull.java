@@ -19,7 +19,7 @@ public class Weibull
 
 	public static double[] estimateParametersMLE(double[] x)
 	{
-		//BrentSolver solver = new BrentSolver(1e-100);
+		// BrentSolver solver = new BrentSolver(1e-100);
 		BisectionSolver solver = new BisectionSolver(1e-10);
 		// IllinoisSolver solver = new IllinoisSolver();
 		WeibullShapeMLEFunction function = new WeibullShapeMLEFunction(x);
@@ -43,13 +43,14 @@ public class Weibull
 
 	public static void main(String[] args) throws IOException
 	{
-		double shape = 100;
-		double scale = 0.01;
+		double shape = 1;
+		double scale = 1;
 		WeibullDistribution weibullOriginal = new WeibullDistribution(shape,
 				scale);
 
 		double[] x = weibullOriginal.sample(100);
 
+		
 		// estiamte Weibull parameters from data points and make new
 		// distribution
 		double[] params = estimateParametersMLE(x);
@@ -59,13 +60,14 @@ public class Weibull
 		// compare distributions
 
 		System.out.println("Shape: " + params[0] + "; Scale: " + params[1]);
-
+		
 		XYPlot plot = new XYPlot("Plot");
 		plot.addDistribution(
 				"Weibull-original (shape: " + shape + "; scale: " + scale + ")",
 				weibullOriginal, 0, 2.5);
 		plot.addDistribution("Weibull-estimated", weibullEstimated, 0, 2.5);
-		plot.display();
+		//plot.display();
+		plot.saveAsJPG("weibull-2.jpg");
 
 	}
 }
