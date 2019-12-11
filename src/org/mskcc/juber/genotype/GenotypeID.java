@@ -145,10 +145,19 @@ public class GenotypeID
 		}
 		else if (type == GenotypeEventType.DELETION)
 		{
-			// 0 base deletion
-			if (start == end)
+			// 2 special cases of single base overlap. These complications have
+			// to be handled because of the way we represent deletion.
+			if (start == end && start == position)
 			{
+				// only the preceding base is covered, no overlap
 				return null;
+			}
+			else if (start == end && start == endPosition)
+			{
+				// the last deleted base overlaps with the given region
+				// this deletion would be recorded for the read because of how
+				// we are parsing deletions. So start one base back.
+				start--;
 			}
 
 			// eg.
@@ -159,6 +168,7 @@ public class GenotypeID
 			nAlt = new byte[1];
 
 			System.arraycopy(ref, start - position, nRef, 0, nRef.length);
+			nAlt[0] = nRef[0];
 
 			return new GenotypeID(type, contig, start, nRef, nAlt);
 
